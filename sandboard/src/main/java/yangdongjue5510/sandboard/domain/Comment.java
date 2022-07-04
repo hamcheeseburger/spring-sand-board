@@ -1,41 +1,42 @@
 package yangdongjue5510.sandboard.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 
 @Entity
-@Table(name = "post")
+@Table(name = "comment")
 @Getter
-public class Post {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
-
     private String content;
 
-    @OneToMany(mappedBy = "post")
-    private List<Comment> comments = new ArrayList<>();
+    @ManyToOne
+    private Post post;
 
-    protected Post() {
+    protected Comment() {
+
     }
 
     @Builder
-    public Post(final Long id, final String title, final String content, final List<Comment> comments) {
+    public Comment(final Long id, final String content, final Post post) {
         this.id = id;
-        this.title = title;
         this.content = content;
-        this.comments = comments;
+        this.post = post;
+    }
+
+    public void setPost(final Post post) {
+        this.post = post;
+        post.getComments().add(this);
     }
 }
